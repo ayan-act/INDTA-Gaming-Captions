@@ -3,163 +3,198 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Contact Us | INDTA Gaming Captions Generator - Get in Touch</title>
-    <meta name="description" content="Have questions, suggestions, or found a bug? Contact the INDTA Gaming Captions team. We are here to help gamers level up their content.">
-    <meta name="keywords" content="contact indta, gaming caption generator support, report bug indta, gaming tool feedback">
+    <title>Contact Us | INDTA Gaming Captions Generator</title>
+    <meta name="description" content="Get in touch with the INDTA team. Report bugs, suggest features, or just say hi.">
+    <link rel="icon" href="/favicon.webp" type="image/webp">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@700&family=JetBrains+Mono&display=swap');
+        
         :root {
-            --bg: #0a0a0c;
-            --card: #15151a;
-            --accent: #ff0055;
-            --text: #e2e8f0;
-            --dim: #94a3b8;
+            --game-bg: #050507;
+            --game-card: #0f0f13;
+            --game-accent: #ff0055;
             --font-display: "Space Grotesk", sans-serif;
             --font-mono: "JetBrains Mono", monospace;
         }
-        body {
-            font-family: 'Inter', system-ui, -apple-system, sans-serif;
-            background-color: var(--bg);
-            color: var(--text);
-            line-height: 1.6;
-            margin: 0;
-            padding: 0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            min-height: 100vh;
-        }
-        .container {
-            max-width: 600px;
-            width: 90%;
-            background: var(--card);
-            padding: 3rem;
-            border-radius: 2rem;
-            border: 1px solid rgba(255,255,255,0.05);
-            text-align: center;
-            box-shadow: 0 20px 50px rgba(0,0,0,0.3);
-            margin-top: 6rem;
-        }
-        h1 { font-family: var(--font-display); font-size: 2rem; color: #fff; margin-bottom: 1rem; text-transform: uppercase; letter-spacing: -1px; }
-        h1 span { color: var(--accent); }
-        p { color: var(--dim); margin-bottom: 2rem; font-size: 1.1rem; }
-        .email-box {
-            background: rgba(255, 0, 85, 0.05);
-            border: 1px dashed var(--accent);
-            padding: 1.5rem;
-            border-radius: 1rem;
-            display: inline-block;
-            margin: 1rem 0;
-        }
-        .email-box a {
-            color: var(--accent);
-            font-size: 1.4rem;
-            font-weight: bold;
-            text-decoration: none;
-        }
-        .support-text { font-size: 0.9rem; margin-top: 2rem; }
-        a.back-link { display: block; margin-top: 3rem; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 2px; color: var(--dim); text-decoration: none; }
-        a.back-link:hover { color: #fff; }
 
-        /* Navbar Styles */
-        nav {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            z-index: 100;
-            max-width: 896px;
-            margin: 0 auto;
-            padding: 1.5rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background: var(--bg);
-        }
-        .nav-logo {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            text-decoration: none;
+        body {
+            background-color: var(--game-bg);
             color: #fff;
+            font-family: 'Inter', sans-serif;
         }
-        .nav-logo-box {
-            padding: 0.5rem;
-            background: var(--accent);
-            border-radius: 0.5rem;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 0 15px -3px rgba(255, 0, 85, 0.4);
-        }
-        .nav-logo-text {
-            font-family: var(--font-display);
-            text-transform: uppercase;
-            letter-spacing: -1px;
-            font-weight: 700;
-            font-size: 1.25rem;
-        }
-        .nav-logo:hover .nav-logo-text {
-            color: var(--accent);
-        }
-        .nav-links {
-            display: flex;
-            gap: 1.5rem;
-            align-items: center;
-        }
-        @media (min-width: 640px) {
-            .nav-links { gap: 2rem; }
-        }
-        .nav-link {
-            font-family: var(--font-mono);
-            font-size: 0.7rem;
-            text-transform: uppercase;
-            letter-spacing: 0.2em;
-            color: var(--dim);
-            text-decoration: none;
-        }
-        .nav-link:hover {
-            color: #fff;
-        }
-        .nav-link.active {
-            color: #fff;
-        }
-        @media (max-width: 600px) { 
-            .nav-logo-text { display: none; }
-        }
+
+        .font-display { font-family: var(--font-display); }
+        .font-mono { font-family: var(--font-mono); }
     </style>
-    <script src="https://unpkg.com/lucide@latest"></script>
 </head>
-<body>
-    <nav>
-        <a href="/" class="nav-logo">
-            <div class="nav-logo-box">
-                <i data-lucide="gamepad-2" style="width: 1.25rem; height: 1.25rem;"></i>
+<body class="min-h-screen selection:bg-[#ff0055] selection:text-white">
+    <!-- Background Ambience -->
+    <div class="fixed inset-0 overflow-hidden pointer-events-none -z-10">
+        <div class="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-[#ff0055]/20 rounded-full blur-[120px]"></div>
+        <div class="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-blue-600/20 rounded-full blur-[120px]"></div>
+        <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-5"></div>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="relative z-20 max-w-4xl mx-auto px-6 py-6 flex items-center justify-between">
+        <a href="/" class="flex items-center gap-3 group text-white decoration-none hover:no-underline">
+            <div class="p-2 bg-[#ff0055] rounded-xl shadow-[0_0_15px_-3px_rgba(255,0,85,0.4)] group-hover:shadow-[0_0_20px_-3px_rgba(255,0,85,0.6)] transition-all">
+                <i data-lucide="gamepad-2" class="w-6 h-6"></i>
             </div>
-            <span class="nav-logo-text">INDTA</span>
+            <span class="font-display text-xl uppercase tracking-tighter group-hover:text-[#ff0055] transition-colors">INDTA</span>
         </a>
-        <div class="nav-links">
-            <a href="/" class="nav-link">Home</a>
-            <a href="/about" class="nav-link">About</a>
-            <a href="/contact" class="nav-link active">Contact</a>
-            <a href="/privacy-policy" class="nav-link">Privacy</a>
+        
+        <div class="flex items-center gap-6 sm:gap-8">
+            <a href="/" class="text-[10px] sm:text-xs font-mono uppercase tracking-[0.2em] text-gray-400 hover:text-white transition-colors">Home</a>
+            <a href="/about" class="text-[10px] sm:text-xs font-mono uppercase tracking-[0.2em] text-gray-400 hover:text-white transition-colors">About</a>
+            <a href="/?view=contact" class="text-[10px] sm:text-xs font-mono uppercase tracking-[0.2em] text-white underline underline-offset-4 decoration-[#ff0055]">Contact</a>
+            <a href="/privacy-policy" class="text-[10px] sm:text-xs font-mono uppercase tracking-[0.2em] text-gray-400 hover:text-white transition-colors">Privacy</a>
         </div>
     </nav>
+
+    <main class="relative z-10 max-w-4xl mx-auto px-6 py-12 flex justify-center">
+        <div class="w-full max-w-xl">
+            <a href="/" class="flex items-center gap-2 text-gray-400 hover:text-white transition-colors mb-8 group">
+                <i data-lucide="arrow-left" class="w-4 h-4 group-hover:-translate-x-1 transition-transform"></i>
+                <span class="text-xs font-mono uppercase tracking-widest">Back to Generator</span>
+            </a>
+
+            <div class="bg-[#0f0f13]/50 backdrop-blur-xl border border-white/5 rounded-[2.5rem] p-8 md:p-12 shadow-2xl relative overflow-hidden">
+                <div class="relative z-10">
+                    <header class="mb-10">
+                        <h1 class="text-3xl md:text-4xl font-display uppercase tracking-tight text-white mb-3">
+                            Get in <span class="text-[#ff0055]">Touch</span>
+                        </h1>
+                        <p class="text-gray-400 text-sm leading-relaxed max-w-sm">
+                            Found a bug or have a suggestion? We're all ears. Drop us a line and let's level up together.
+                        </p>
+                    </header>
+
+                    <form id="contactForm" class="space-y-6">
+                        <div class="space-y-2">
+                            <label class="block text-[10px] font-mono uppercase tracking-[0.2em] text-gray-500 ml-1">Your Name</label>
+                            <div class="relative">
+                                <i data-lucide="user" class="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500"></i>
+                                <input id="name" required type="text" placeholder="e.g. Alex Hunter" class="w-full bg-white/5 border border-white/10 rounded-2xl py-4 pl-12 pr-6 text-sm text-white placeholder:text-gray-600 focus:outline-none focus:border-[#ff0055]/50 focus:ring-1 focus:ring-[#ff0055]/50 transition-all">
+                            </div>
+                        </div>
+
+                        <div class="space-y-2">
+                            <label class="block text-[10px] font-mono uppercase tracking-[0.2em] text-gray-500 ml-1">Email Address</label>
+                            <div class="relative">
+                                <i data-lucide="mail" class="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500"></i>
+                                <input id="email" required type="email" placeholder="alex@gaming.com" class="w-full bg-white/5 border border-white/10 rounded-2xl py-4 pl-12 pr-6 text-sm text-white placeholder:text-gray-600 focus:outline-none focus:border-[#ff0055]/50 focus:ring-1 focus:ring-[#ff0055]/50 transition-all">
+                            </div>
+                        </div>
+
+                        <div class="space-y-2">
+                            <label class="block text-[10px] font-mono uppercase tracking-[0.2em] text-gray-500 ml-1">Your Message</label>
+                            <div class="relative">
+                                <i data-lucide="message-square" class="absolute left-4 top-6 w-4 h-4 text-gray-500"></i>
+                                <textarea id="message" required rows="4" placeholder="Tell us what's on your mind..." class="w-full bg-white/5 border border-white/10 rounded-2xl py-4 pl-12 pr-6 text-sm text-white placeholder:text-gray-600 focus:outline-none focus:border-[#ff0055]/50 focus:ring-1 focus:ring-[#ff0055]/50 transition-all resize-none"></textarea>
+                            </div>
+                        </div>
+
+                        <button id="submitBtn" type="submit" class="w-full bg-[#ff0055] text-white font-display uppercase tracking-widest py-4 rounded-2xl shadow-[0_0_20px_-5px_rgba(255,0,85,0.5)] hover:shadow-[0_0_25px_-5px_rgba(255,0,85,0.6)] disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-3 transition-all">
+                            <i data-lucide="send" class="w-5 h-5"></i>
+                            <span>Send Message</span>
+                        </button>
+                    </form>
+
+                    <div id="successState" class="hidden text-center py-12">
+                        <div class="w-20 h-20 bg-[#ff0055]/20 rounded-full flex items-center justify-center mx-auto mb-6 text-[#ff0055]">
+                            <i data-lucide="check-circle-2" class="w-10 h-10"></i>
+                        </div>
+                        <h3 class="text-2xl font-display uppercase text-white mb-2">Message Received</h3>
+                        <p class="text-gray-400 text-sm mb-8">Our team will process your transmission and get back to you across the frequency soon.</p>
+                        <button onclick="location.reload()" class="text-[#ff0055] border border-[#ff0055]/30 px-6 py-2 rounded-full text-xs font-mono uppercase tracking-widest hover:bg-[#ff0055]/10 transition-all">
+                            Send Another
+                        </button>
+                    </div>
+
+                    <footer class="mt-12 pt-8 border-t border-white/5 text-center">
+                        <p class="text-[10px] font-mono text-gray-600 uppercase tracking-widest mb-4">Direct Frequency</p>
+                        <a href="mailto:contact@indtanews.com" class="group inline-flex items-center gap-3 px-6 py-3 bg-white/5 rounded-2xl border border-white/5 hover:border-[#ff0055]/20 transition-all hover:no-underline">
+                            <div class="p-2 bg-gray-800 rounded-lg text-gray-400 group-hover:text-[#ff0055] transition-colors">
+                                <i data-lucide="mail" class="w-4 h-4"></i>
+                            </div>
+                            <span class="text-sm font-bold text-gray-300 group-hover:text-white transition-colors tracking-tight">contact@indtanews.com</span>
+                        </a>
+                    </footer>
+                </div>
+            </div>
+        </div>
+    </main>
+
     <script>
         lucide.createIcons();
+
+        const contactForm = document.getElementById('contactForm');
+        const successState = document.getElementById('successState');
+        const submitBtn = document.getElementById('submitBtn');
+
+        contactForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const btnText = submitBtn.querySelector('span');
+            const originalBtnHtml = submitBtn.innerHTML;
+
+            const formData = {
+                name: document.getElementById('name').value,
+                email: document.getElementById('email').value,
+                message: document.getElementById('message').value
+            };
+
+            submitBtn.disabled = true;
+            btnText.textContent = 'Transmitting...';
+            submitBtn.innerHTML = '<svg class="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg><span>Transmitting...</span>';
+
+            try {
+                const res = await fetch('/api/contact', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(formData)
+                });
+
+                const data = await res.json();
+
+                if (res.ok) {
+                    contactForm.classList.add('hidden');
+                    successState.classList.remove('hidden');
+                    Toastify({
+                        text: "Message sent successfully!",
+                        duration: 3000,
+                        close: true,
+                        gravity: "top",
+                        position: "right",
+                        style: {
+                            background: "linear-gradient(to right, #ff0055, #ff4d88)",
+                            borderRadius: "1rem"
+                        }
+                    }).showToast();
+                } else {
+                    throw new Error(data.error || 'Failed to send message');
+                }
+            } catch (err) {
+                Toastify({
+                    text: err.message,
+                    duration: 4000,
+                    close: true,
+                    gravity: "top",
+                    position: "right",
+                    style: {
+                        background: "#ef4444",
+                        borderRadius: "1rem"
+                    }
+                }).showToast();
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = originalBtnHtml;
+            }
+        });
     </script>
-    <div class="container">
-        <h1>Contact <span>Us</span></h1>
-        <p>Whether you've found a glitch in the zone or have an idea to make our <span style="color:#fff">gaming caption generator</span> even better, we want to hear from you!</p>
-        
-        <div class="email-box">
-            <a href="mailto:contact@indtanews.com">contact@indtanews.com</a>
-        </div>
-
-        <div class="support-text">
-            <p>Our team at <span style="color:#fff">IndtaNews</span> typically responds within 24-48 hours. Please include details about your device or the specific feature you are inquiring about.</p>
-        </div>
-
-        <a href="/" class="back-link">← Back to Generator</a>
-    </div>
 </body>
 </html>

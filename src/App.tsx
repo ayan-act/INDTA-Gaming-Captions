@@ -31,7 +31,9 @@ import {
   MessageSquare
 } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
+import toast, { Toaster } from 'react-hot-toast';
 import { AboutUs } from "./components/AboutUs";
+import { ContactForm } from "./components/ContactForm";
 
 const GAMES = ["Free Fire", "BGMI", "PUBG", "Valorant", "Minecraft", "GTA V", "Call of Duty"];
 const MOODS = [
@@ -54,7 +56,15 @@ export default function App() {
   const [platform, setPlatform] = useState(PLATFORMS[0].id);
   const [language, setLanguage] = useState(LANGUAGES[0]);
   const [description, setDescription] = useState("");
+  const [currentView, setCurrentView] = useState<"generator" | "contact">("generator");
   const [loading, setLoading] = useState(false);
+
+  React.useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    if (params.get("view") === "contact") {
+      setCurrentView("contact");
+    }
+  }, []);
   const [result, setResult] = useState<{
     shortCaptions: string[];
     longCaption: string;
@@ -171,6 +181,8 @@ IMPORTANT: You MUST respond ONLY with a JSON object in the following format:
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-10" />
       </div>
 
+      <Toaster position="top-right" />
+
       {/* Navigation */}
       <nav className="relative z-20 max-w-4xl mx-auto px-6 py-6 flex items-center justify-between">
         <motion.a 
@@ -187,26 +199,53 @@ IMPORTANT: You MUST respond ONLY with a JSON object in the following format:
         
         <div className="flex items-center gap-6 sm:gap-8">
           {[
-            { name: 'Home', path: '/' },
+            { name: 'Home', action: () => setCurrentView('generator') },
             { name: 'About', path: '/about' },
             { name: 'Contact', path: '/contact' },
             { name: 'Privacy', path: '/privacy-policy' }
           ].map((link) => (
-            <motion.a
-              key={link.name}
-              href={link.path}
-              initial={{ opacity: 0, y: -10 }}
-              animate={{ opacity: 1, y: 0 }}
-              className="text-[10px] sm:text-xs font-mono uppercase tracking-[0.2em] text-gray-400 hover:text-white transition-colors"
-            >
-              {link.name}
-            </motion.a>
+            link.path ? (
+              <motion.a
+                key={link.name}
+                href={link.path}
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="text-[10px] sm:text-xs font-mono uppercase tracking-[0.2em] text-gray-400 hover:text-white transition-colors"
+              >
+                {link.name}
+              </motion.a>
+            ) : (
+              <motion.button
+                key={link.name}
+                onClick={link.action}
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                className={`text-[10px] sm:text-xs font-mono uppercase tracking-[0.2em] transition-colors ${
+                  (link.name === 'Home' && currentView === 'generator') || (link.name === 'Contact' && currentView === 'contact')
+                  ? 'text-white underline underline-offset-4 decoration-game-accent' 
+                  : 'text-gray-400 hover:text-white'
+                }`}
+              >
+                {link.name}
+              </motion.button>
+            )
           ))}
         </div>
       </nav>
 
-      <main className="relative z-10 max-w-4xl mx-auto px-6 py-12">
-        {/* Header */}
+      <AnimatePresence mode="wait">
+        {currentView === "contact" ? (
+          <main key="contact" className="relative z-10 max-w-4xl mx-auto px-6 py-24">
+            <ContactForm onBack={() => setCurrentView("generator")} />
+          </main>
+        ) : (
+          <motion.div
+            key="generator"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+          >
+            <main className="relative z-10 max-w-4xl mx-auto px-6 py-12">
         <header className="mb-12 text-center">
           <motion.div 
             initial={{ scale: 0.8, opacity: 0 }}
@@ -726,7 +765,7 @@ IMPORTANT: You MUST respond ONLY with a JSON object in the following format:
         </div>
 
         {/* Contact Us */}
-        <div className="max-w-3xl mx-auto space-y-12">
+        <div className="max-w-3xl mx-auto space-y-12 pt-20">
           <div className="text-center space-y-2">
             <h3 className="text-2xl font-display uppercase text-white flex items-center justify-center gap-3">
               Contact Us
@@ -801,9 +840,12 @@ IMPORTANT: You MUST respond ONLY with a JSON object in the following format:
           </form>
         </div>
 
-      </section>
+        </section>
+      </motion.div>
+    )}
+  </AnimatePresence>
 
-      {/* Stats Counter (Dummy) */}
+    {/* Stats Counter (Dummy) */}
       <footer className="max-w-4xl mx-auto px-6 pb-8 mt-8">
         <div className="text-center">
           <p className="text-[10px] text-white opacity-40 tracking-widest uppercase">
