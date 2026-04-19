@@ -102,35 +102,29 @@ export default function App() {
   const generateCaptions = async () => {
     setLoading(true);
     setResult(null);
+
     try {
       const selectedMood = MOODS.find(m => m.id === mood)?.label || mood;
-      const prompt = `
-        You are an expert social media gaming content writer.
-        Task: Generate HIGH-ENGAGEMENT captions and hashtags for a gaming post.
-        
-        Game: ${game}
-        Mood: ${selectedMood}
-        Platform: ${platform}
-        ${description ? `Context about the post: ${description}` : ""}
-        
-        Requirements:
-        1. 3 different short captions (catchy, viral style, max 10 words each).
-        2. 1 long caption (engaging, storytelling style, 3-5 sentences).
-        3. 20 trending hashtags.
-        
-        Language: ${language === 'Hinglish' ? 'Hinglish (Mix of Hindi and English written in Latin script)' : language}.
-        Tone: Energetic, Gen-Z friendly, cool.
-        Emojis: Use relevant gaming emojis.
-        
-        Format the output as JSON:
-        {
-          "shortCaptions": ["caption 1", "caption 2", "caption 3"],
-          "longCaption": "long caption text here",
-          "hashtags": "#tag1 #tag2 ..."
-        }
-      `;
 
-      const response = await fetch("/api/generate", {
+      const prompt = `
+You are an expert social media gaming content writer.
+Task: Generate HIGH-ENGAGEMENT captions and hashtags for a gaming post.
+
+Game: ${game}
+Mood: ${selectedMood}
+Platform: ${platform}
+${description ? `Context about the post: ${description}` : ""}
+
+Requirements:
+1. 3 short captions (max 10 words each).
+2. 1 long caption (3-5 sentences).
+3. 20 trending hashtags.
+
+Language: ${language}.
+Tone: Energetic, Gen-Z friendly.
+`;
+
+      const res = await fetch("/api/generate", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -138,15 +132,16 @@ export default function App() {
         body: JSON.stringify({ prompt }),
       });
 
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.error || "Failed to generate content");
+      const data = await res.json();
+
+      if (!res.ok) {
+        throw new Error(data.error || "Failed");
       }
 
-      const data = await response.json();
-      setResult(data);
-    } catch (error) {
-      console.error("Generation failed:", error);
+      setResult(data.result);
+
+    } catch (err) {
+      console.error(err);
       alert("Something went wrong. Please try again.");
     } finally {
       setLoading(false);
