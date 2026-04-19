@@ -17,7 +17,7 @@ export default async function handler(req, res) {
         return res.status(500).json({ error: "SMTP server is not configured on the server." });
     }
 
-    const port = parseInt(process.env.SMTP_PORT || "587");
+    const port = Number(process.env.SMTP_PORT || "587");
     const isSecure = port === 465;
 
     const transporter = nodemailer.createTransport({
@@ -30,19 +30,19 @@ export default async function handler(req, res) {
       },
     });
 
-    // Verify connection configuration
-    try {
-        await transporter.verify();
-    } catch (verifyError) {
-        console.error("SMTP Verification failed:", verifyError);
-        return res.status(500).json({ error: "Could not connect to the SMTP server. Please check credentials." });
-    }
+    // Verify SMTP connection
+    await transporter.verify();
 
-    await transporter.sendMail({
-      from: `"INDTA Gaming Contact" <${process.env.SMTP_USER}>`,
+    const info = await transporter.sendMail({
+      from: `"INDTA Contact" <${process.env.SMTP_USER}>`,
       to: process.env.CONTACT_EMAIL || "contact@indtanews.com",
       replyTo: email,
       subject: `New Contact Message from ${name}`,
+      text: `
+Name: ${name}
+Email: ${email}
+Message: ${message}
+      `,
       html: `
         <div style="font-family: sans-serif; padding: 20px; color: #333;">
             <h2 style="color: #FF4E00;">New Contact Submission</h2>
@@ -55,10 +55,12 @@ export default async function handler(req, res) {
       `,
     });
 
+    console.log("Mail sent:", info);
+
     return res.status(200).json({ success: true, message: "Your message has been sent successfully!" });
 
   } catch (err) {
-    console.error("Email sending error:", err);
+    console.error("EMAIL ERROR:", err);
     return res.status(500).json({ error: err.message });
   }
 }
