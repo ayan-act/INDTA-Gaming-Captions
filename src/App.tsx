@@ -32,6 +32,7 @@ import {
 } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
 import toast, { Toaster } from 'react-hot-toast';
+import { SpeedInsights } from '@vercel/speed-insights/react';
 import { AboutUs } from "./components/AboutUs";
 import { ContactForm } from "./components/ContactForm";
 
@@ -853,6 +854,7 @@ IMPORTANT: You MUST respond ONLY with a JSON object in the following format:
           </p>
         </div>
       </footer>
+      <SpeedInsights />
     </div>
   );
 }
