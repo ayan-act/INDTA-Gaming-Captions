@@ -171,6 +171,40 @@ IMPORTANT: You MUST respond ONLY with a JSON object in the following format:
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-10" />
       </div>
 
+      {/* Navigation */}
+      <nav className="relative z-20 max-w-4xl mx-auto px-6 py-6 flex items-center justify-between">
+        <motion.a 
+          href="/" 
+          initial={{ opacity: 0, x: -20 }}
+          animate={{ opacity: 1, x: 0 }}
+          className="flex items-center gap-2 group"
+        >
+          <div className="p-2 bg-game-accent rounded-lg shadow-[0_0_15px_-3px_rgba(255,78,0,0.5)]">
+            <Gamepad2 className="w-5 h-5 text-white" />
+          </div>
+          <span className="font-display uppercase italic tracking-tighter text-white group-hover:text-game-accent transition-colors">INDTA</span>
+        </motion.a>
+        
+        <div className="flex items-center gap-6 sm:gap-8">
+          {[
+            { name: 'Home', path: '/' },
+            { name: 'About', path: '/about' },
+            { name: 'Contact', path: '/contact' },
+            { name: 'Privacy', path: '/privacy-policy' }
+          ].map((link) => (
+            <motion.a
+              key={link.name}
+              href={link.path}
+              initial={{ opacity: 0, y: -10 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="text-[10px] sm:text-xs font-mono uppercase tracking-[0.2em] text-gray-400 hover:text-white transition-colors"
+            >
+              {link.name}
+            </motion.a>
+          ))}
+        </div>
+      </nav>
+
       <main className="relative z-10 max-w-4xl mx-auto px-6 py-12">
         {/* Header */}
         <header className="mb-12 text-center">
