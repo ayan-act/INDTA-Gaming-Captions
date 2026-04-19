@@ -122,6 +122,13 @@ Requirements:
 
 Language: ${language}.
 Tone: Energetic, Gen-Z friendly.
+
+IMPORTANT: You MUST respond ONLY with a JSON object in the following format:
+{
+  "shortCaptions": ["string", "string", "string"],
+  "longCaption": "string",
+  "hashtags": "string (space separated hashtags)"
+}
 `;
 
       const res = await fetch("/api/generate", {

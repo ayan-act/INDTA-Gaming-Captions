@@ -31,14 +31,18 @@ async function startServer() {
   let currentKeyIndex = 0;
 
   app.post("/api/generate", async (req, res) => {
-    const { prompt } = req.body;
+    // Vercel-like verification for the function
+    if (req.method !== "POST") {
+      return res.status(405).json({ error: "Only POST allowed" });
+    }
 
+    const { prompt } = req.body || {};
     if (!prompt) {
-      return res.status(400).json({ error: "Prompt is required" });
+      return res.status(400).json({ error: "No prompt provided" });
     }
 
     if (keys.length === 0) {
-      return res.status(500).json({ error: "No API keys configured" });
+      return res.status(500).json({ error: "API key missing or misconfigured" });
     }
 
     let attempts = 0;
@@ -56,7 +60,31 @@ async function startServer() {
         });
 
         const responseText = response.text || "{}";
-        return res.json(JSON.parse(responseText));
+        
+        // Clean the response: extract only the first JSON object found if there's trailing garbage
+        let cleanText = responseText.trim();
+        
+        // Sometimes the model wraps it in markdown even if requested as JSON
+        if (cleanText.startsWith("```json")) {
+          cleanText = cleanText.substring(7);
+        }
+        if (cleanText.endsWith("```")) {
+          cleanText = cleanText.substring(0, cleanText.length - 3);
+        }
+        cleanText = cleanText.trim();
+
+        // If there's still trailing garbage (preventing position 831 error),
+        // find the matching JSON structure
+        const firstBrace = cleanText.indexOf("{");
+        const lastBrace = cleanText.lastIndexOf("}");
+        if (firstBrace !== -1 && lastBrace !== -1 && lastBrace > firstBrace) {
+          cleanText = cleanText.substring(firstBrace, lastBrace + 1);
+        }
+
+        const parsed = JSON.parse(cleanText);
+        
+        // Ensure the response matches frontend expectations (result object)
+        return res.status(200).json({ result: parsed });
       } catch (error: any) {
         console.error(`Attempt with key ${currentKeyIndex + 1} failed:`, error.message);
         
@@ -69,12 +97,12 @@ async function startServer() {
           attempts++;
           console.log(`Rotating to key ${currentKeyIndex + 1}...`);
         } else {
-          return res.status(500).json({ error: error.message || "Failed to generate content" });
+          return res.status(500).json({ error: error.message || "Server error during generation" });
         }
       }
     }
 
-    res.status(429).json({ error: "All API keys have been exhausted or are invalid. Please check your configuration." });
+    return res.status(429).json({ error: "All configured API keys have been exhausted. Please wait or check your keys." });
   });
 
   // Contact Form Endpoint
