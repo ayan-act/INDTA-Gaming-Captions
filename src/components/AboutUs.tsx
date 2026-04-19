@@ -13,10 +13,10 @@ export const AboutUs: React.FC = () => {
           className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-game-accent/10 border border-game-accent/20 mb-4"
         >
           <Users className="w-4 h-4 text-game-accent" />
-          <span className="text-xs font-mono uppercase tracking-widest text-game-accent italic">The Mission</span>
+          <span className="text-xs font-mono uppercase tracking-widest text-game-accent">The Mission</span>
         </motion.div>
         
-        <h2 className="text-3xl md:text-5xl font-display uppercase italic text-white tracking-tighter">
+        <h2 className="text-3xl md:text-5xl font-display uppercase text-white tracking-tighter">
           Level Up Your <span className="text-game-accent">Social Game</span> with INDTA
         </h2>
         

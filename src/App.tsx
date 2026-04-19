@@ -182,7 +182,7 @@ IMPORTANT: You MUST respond ONLY with a JSON object in the following format:
           <div className="p-2 bg-game-accent rounded-lg shadow-[0_0_15px_-3px_rgba(255,78,0,0.5)]">
             <Gamepad2 className="w-5 h-5 text-white" />
           </div>
-          <span className="hidden sm:inline font-display uppercase italic tracking-tighter text-white group-hover:text-game-accent transition-colors">INDTA</span>
+          <span className="hidden sm:inline font-display uppercase tracking-tighter text-white group-hover:text-game-accent transition-colors">INDTA</span>
         </motion.a>
         
         <div className="flex items-center gap-6 sm:gap-8">
@@ -729,7 +729,6 @@ IMPORTANT: You MUST respond ONLY with a JSON object in the following format:
         <div className="max-w-3xl mx-auto space-y-12">
           <div className="text-center space-y-2">
             <h3 className="text-2xl font-display uppercase text-white flex items-center justify-center gap-3">
-              <Mail className="w-6 h-6 text-game-accent" />
               Contact Us
             </h3>
             <p className="text-gray-500 text-sm">Have a suggestion or found a bug? Drop us a line.</p>
