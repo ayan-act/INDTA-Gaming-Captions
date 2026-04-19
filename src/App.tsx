@@ -548,10 +548,10 @@ export default function App() {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
           <div className="space-y-6">
             <h2 className="text-3xl md:text-4xl font-display uppercase tracking-tighter text-white">
-              The INDTA Gaming <span className="text-game-accent">Vibe</span> Decoder
+              <span className="text-game-accent">INDTA</span> GAMING CAPTIONS
             </h2>
             <p className="text-gray-400 leading-relaxed text-lg">
-              INDTA Gaming Caption Generator is more than just a tool, it is your ultimate companion for building a viral gaming brand, combining advanced AI with deep gaming culture to create captions that truly spark engagement instead of just filling space
+              Indta Gaming Caption Generator is more than just a tool, it is your ultimate companion for building a viral gaming brand, combining advanced AI with deep gaming culture to create captions that truly spark engagement instead of just filling space
             </p>
             <div className="flex gap-4">
               <a 
