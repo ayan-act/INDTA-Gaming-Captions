@@ -45,57 +45,46 @@ async function startServer() {
     }
 
     let attempts = 0;
+    let lastError = "";
+
     while (attempts < keys.length) {
       const activeKey = keys[currentKeyIndex];
 
       try {
         const response = await fetch(
-          "https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview:generateContent?key=" + activeKey,
+          `https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview:generateContent?key=${activeKey}`,
           {
             method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
+            headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
-              contents: [
-                {
-                  parts: [{ text: prompt }],
-                },
-              ],
+              contents: [{ parts: [{ text: prompt }] }],
               generationConfig: {
                 responseMimeType: "application/json",
-              }
+              },
             }),
           }
         );
 
-        const data = await response.json();
-
+        // Handle rate limit / failure
         if (!response.ok) {
-          const errorMessage = data.error?.message?.toLowerCase() || "";
-          const isQuotaError = response.status === 429 || errorMessage.includes("quota");
-          const isInvalidKeyError = response.status === 400 || response.status === 401 || errorMessage.includes("api key not valid");
-
-          if (isQuotaError || isInvalidKeyError) {
-            currentKeyIndex = (currentKeyIndex + 1) % keys.length;
-            attempts++;
-            console.log(`Rotating to key ${currentKeyIndex + 1}...`);
-            continue;
-          }
-          throw new Error(data.error?.message || "Failed to call AI API");
+          console.log(`Key ${currentKeyIndex + 1} failed: ${response.status}`);
+          lastError = `Error ${response.status}`;
+          
+          currentKeyIndex = (currentKeyIndex + 1) % keys.length;
+          attempts++;
+          
+          // small delay before next retry
+          await new Promise(r => setTimeout(r, 400));
+          continue;
         }
 
+        const data = await response.json();
         const responseText = data?.candidates?.[0]?.content?.parts?.[0]?.text || "{}";
-        
+
         // Sanitizing the response for JSON compatibility
         let cleanText = responseText.trim();
-        if (cleanText.startsWith("```json")) {
-          cleanText = cleanText.substring(7);
-        }
-        if (cleanText.endsWith("```")) {
-          cleanText = cleanText.substring(0, cleanText.length - 3);
-        }
-        cleanText = cleanText.trim();
+        if (cleanText.startsWith("```json")) cleanText = cleanText.substring(7);
+        if (cleanText.endsWith("```")) cleanText = cleanText.substring(0, cleanText.length - 3);
 
         const firstBrace = cleanText.indexOf("{");
         const lastBrace = cleanText.lastIndexOf("}");
@@ -103,24 +92,43 @@ async function startServer() {
           cleanText = cleanText.substring(firstBrace, lastBrace + 1);
         }
 
-        // We parse it here to ensure the frontend gets an object
-        const parsedContent = JSON.parse(cleanText);
+        let parsed;
+        try {
+          parsed = JSON.parse(cleanText);
+        } catch {
+          parsed = { caption: cleanText, hashtags: ["#gaming", "#viral"] };
+        }
 
-        return res.status(200).json({ result: parsedContent });
+        // ✅ SUCCESS
+        return res.status(200).json({ result: parsed });
 
       } catch (err: any) {
-        console.error(`Attempt with key ${currentKeyIndex + 1} failed:`, err.message);
-        
-        // Standardize retry logic for fetch errors
+        console.log(`Key ${currentKeyIndex + 1} crashed, retrying...`);
+        lastError = err.message;
+
         currentKeyIndex = (currentKeyIndex + 1) % keys.length;
         attempts++;
-        if (attempts >= keys.length) {
-          return res.status(500).json({ error: err.message || "All attempts failed" });
-        }
+
+        // delay before next attempt
+        await new Promise(r => setTimeout(r, 400));
+        continue;
       }
     }
 
-    return res.status(429).json({ error: "All configured API keys have been exhausted." });
+    // 🔥 FINAL FALLBACK (NO MORE 500 ERROR)
+    console.error("All keys exhausted or failed. Returning fallback.");
+    return res.status(200).json({
+      result: {
+        shortCaptions: [
+          "⚡ Server busy right now, please try again in a few seconds.",
+          "🔥 Generating epicness... but reaching limits. Try again soon!",
+          "🎮 Leveling up our system. Re-attempting connection..."
+        ],
+        longCaption: "We are currently experiencing high traffic. Please wait a moment and try generating again for the best quality gaming captions.",
+        hashtags: "#gaming #viral #trending #gamers #nextlevel"
+      },
+      fallback: true
+    });
   });
 
   // Contact Form Endpoint
