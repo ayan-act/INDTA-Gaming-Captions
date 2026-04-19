@@ -31,6 +31,7 @@ import {
   MessageSquare
 } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
+import { AboutUs } from "./components/AboutUs";
 
 const GAMES = ["Free Fire", "BGMI", "PUBG", "Valorant", "Minecraft", "GTA V", "Call of Duty"];
 const MOODS = [
@@ -589,6 +590,9 @@ IMPORTANT: You MUST respond ONLY with a JSON object in the following format:
             </div>
           </div>
         </div>
+
+        {/* About Us Section */}
+        <AboutUs />
 
         {/* How to Use & Features */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
