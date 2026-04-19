@@ -657,47 +657,47 @@ IMPORTANT: You MUST respond ONLY with a JSON object in the following format:
             </div>
           </div>
 
-          <div className="lg:col-span-2 grid grid-cols-1 sm:grid-cols-2 gap-8 text-left">
-            <div className="space-y-6">
-               <div className="flex items-center gap-3">
-                 <div className="p-2 bg-blue-500/10 rounded-xl border border-blue-500/20">
-                   <ListChecks className="w-5 h-5 text-blue-400" />
-                 </div>
-                 <h3 className="text-xl font-display uppercase text-white">Features</h3>
+          <div className="lg:col-span-2 grid grid-cols-1 sm:grid-cols-2 gap-10 text-left">
+            <div className="flex gap-3.5 items-start bg-white/[0.02] p-6 rounded-3xl border border-white/5">
+               <div className="p-2.5 bg-blue-500/10 rounded-xl border border-blue-500/20 shrink-0">
+                 <ListChecks className="w-5 h-5 text-blue-400" />
                </div>
-               <ul className="space-y-4">
-                 {[
-                   { t: 'AI-Powered Captions', d: 'Context-aware captions in Bengali, Hindi, English, and Hinglish.' },
-                   { t: 'Viral Hashtags', d: 'Trending tags extracted from current social data.' },
-                   { t: 'One-Tap Copy', d: 'Fully interactive cards for ultra-fast workflow.' }
-                 ].map((feat, idx) => (
-                   <li key={idx} className="group">
-                     <p className="text-white font-bold text-sm group-hover:text-blue-400 transition-colors uppercase tracking-tight">{feat.t}</p>
-                     <p className="text-gray-500 text-xs mt-1">{feat.d}</p>
-                   </li>
-                 ))}
-               </ul>
+               <div className="space-y-6 pt-1">
+                 <h3 className="text-xl font-display uppercase text-white leading-tight tracking-tight">Features</h3>
+                 <ul className="space-y-5">
+                   {[
+                     { t: 'AI-Powered Captions', d: 'Context-aware captions in Bengali, Hindi, English, and Hinglish.' },
+                     { t: 'Viral Hashtags', d: 'Trending tags extracted from current social data.' },
+                     { t: 'One-Tap Copy', d: 'Fully interactive cards for ultra-fast workflow.' }
+                   ].map((feat, idx) => (
+                     <li key={idx} className="group">
+                       <p className="text-white font-bold text-sm group-hover:text-blue-400 transition-colors uppercase tracking-tight">{feat.t}</p>
+                       <p className="text-gray-500 text-xs mt-1.5 leading-relaxed">{feat.d}</p>
+                     </li>
+                   ))}
+                 </ul>
+               </div>
             </div>
 
-            <div className="space-y-6">
-               <div className="flex items-center gap-3">
-                 <div className="p-2 bg-game-accent/10 rounded-xl border border-game-accent/20">
-                   <Sparkles className="w-5 h-5 text-game-accent" />
-                 </div>
-                 <h3 className="text-xl font-display uppercase text-white">Your Benefits</h3>
+            <div className="flex gap-3.5 items-start bg-white/[0.02] p-6 rounded-3xl border border-white/5">
+               <div className="p-2.5 bg-game-accent/10 rounded-xl border border-game-accent/20 shrink-0">
+                 <Sparkles className="w-5 h-5 text-game-accent" />
                </div>
-               <ul className="space-y-4">
-                 {[
-                   { t: 'Save Serious Time', d: 'Go from clip to post in under 30 seconds.' },
-                   { t: 'Boost Performance', d: 'AI-optimized hooks to keep people watching.' },
-                   { t: 'Professional Look', d: 'Expert-level writing for your gaming profile.' }
-                 ].map((ben, idx) => (
-                   <li key={idx} className="group">
-                     <p className="text-white font-bold text-sm group-hover:text-game-accent transition-colors uppercase tracking-tight">{ben.t}</p>
-                     <p className="text-gray-500 text-xs mt-1">{ben.d}</p>
-                   </li>
-                 ))}
-               </ul>
+               <div className="space-y-6 pt-1">
+                 <h3 className="text-xl font-display uppercase text-white leading-tight tracking-tight">Your Benefits</h3>
+                 <ul className="space-y-5">
+                   {[
+                     { t: 'Save Serious Time', d: 'Go from clip to post in under 30 seconds.' },
+                     { t: 'Boost Performance', d: 'AI-optimized hooks to keep people watching.' },
+                     { t: 'Professional Look', d: 'Expert-level writing for your gaming profile.' }
+                   ].map((ben, idx) => (
+                     <li key={idx} className="group">
+                       <p className="text-white font-bold text-sm group-hover:text-game-accent transition-colors uppercase tracking-tight">{ben.t}</p>
+                       <p className="text-gray-500 text-xs mt-1.5 leading-relaxed">{ben.d}</p>
+                     </li>
+                   ))}
+                 </ul>
+               </div>
             </div>
           </div>
         </div>
@@ -804,7 +804,7 @@ IMPORTANT: You MUST respond ONLY with a JSON object in the following format:
       </section>
 
       {/* Stats Counter (Dummy) */}
-      <footer className="max-w-4xl mx-auto px-6 pb-20 mt-12">
+      <footer className="max-w-4xl mx-auto px-6 pb-8 mt-8">
         <div className="text-center">
           <p className="text-[10px] text-white opacity-40 tracking-widest uppercase">
             © 2026 The Indtanews. All Rights Reserved.
