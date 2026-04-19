@@ -25,11 +25,8 @@ async function startServer() {
     keys.push(process.env.GEMINI_API_KEY);
   }
 
-  if (keys.length > 0) {
-    console.log(`[Gemini] Loaded ${keys.length} API keys for rotation.`);
-  } else {
-    console.error("[Gemini] No API keys found in environment variables!");
-  }
+  console.log(`Loaded ${keys.length} API keys for rotation.`);
+  console.log(`System GEMINI_API_KEY present: ${!!process.env.GEMINI_API_KEY}`);
 
   let currentKeyIndex = 0;
 
