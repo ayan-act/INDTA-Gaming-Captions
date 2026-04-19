@@ -31,9 +31,12 @@ async function startServer() {
   let currentKeyIndex = 0;
 
   app.post("/api/generate", async (req, res) => {
-    // Vercel-like verification for the function
     if (req.method !== "POST") {
       return res.status(405).json({ error: "Only POST allowed" });
+    }
+
+    if (keys.length === 0) {
+      return res.status(500).json({ error: "No API keys configured" });
     }
 
     const { prompt } = req.body || {};
@@ -41,30 +44,51 @@ async function startServer() {
       return res.status(400).json({ error: "No prompt provided" });
     }
 
-    if (keys.length === 0) {
-      return res.status(500).json({ error: "API key missing or misconfigured" });
-    }
-
     let attempts = 0;
     while (attempts < keys.length) {
       const activeKey = keys[currentKeyIndex];
-      const ai = new GoogleGenAI({ apiKey: activeKey });
 
       try {
-        const response = await ai.models.generateContent({
-          model: "gemini-3-flash-preview",
-          contents: prompt,
-          config: {
-            responseMimeType: "application/json",
-          },
-        });
+        const response = await fetch(
+          "https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview:generateContent?key=" + activeKey,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              contents: [
+                {
+                  parts: [{ text: prompt }],
+                },
+              ],
+              generationConfig: {
+                responseMimeType: "application/json",
+              }
+            }),
+          }
+        );
 
-        const responseText = response.text || "{}";
+        const data = await response.json();
+
+        if (!response.ok) {
+          const errorMessage = data.error?.message?.toLowerCase() || "";
+          const isQuotaError = response.status === 429 || errorMessage.includes("quota");
+          const isInvalidKeyError = response.status === 400 || response.status === 401 || errorMessage.includes("api key not valid");
+
+          if (isQuotaError || isInvalidKeyError) {
+            currentKeyIndex = (currentKeyIndex + 1) % keys.length;
+            attempts++;
+            console.log(`Rotating to key ${currentKeyIndex + 1}...`);
+            continue;
+          }
+          throw new Error(data.error?.message || "Failed to call AI API");
+        }
+
+        const responseText = data?.candidates?.[0]?.content?.parts?.[0]?.text || "{}";
         
-        // Clean the response: extract only the first JSON object found if there's trailing garbage
+        // Sanitizing the response for JSON compatibility
         let cleanText = responseText.trim();
-        
-        // Sometimes the model wraps it in markdown even if requested as JSON
         if (cleanText.startsWith("```json")) {
           cleanText = cleanText.substring(7);
         }
@@ -73,36 +97,30 @@ async function startServer() {
         }
         cleanText = cleanText.trim();
 
-        // If there's still trailing garbage (preventing position 831 error),
-        // find the matching JSON structure
         const firstBrace = cleanText.indexOf("{");
         const lastBrace = cleanText.lastIndexOf("}");
         if (firstBrace !== -1 && lastBrace !== -1 && lastBrace > firstBrace) {
           cleanText = cleanText.substring(firstBrace, lastBrace + 1);
         }
 
-        const parsed = JSON.parse(cleanText);
-        
-        // Ensure the response matches frontend expectations (result object)
-        return res.status(200).json({ result: parsed });
-      } catch (error: any) {
-        console.error(`Attempt with key ${currentKeyIndex + 1} failed:`, error.message);
-        
-        const errorMessage = error.message?.toLowerCase() || "";
-        const isQuotaError = error.status === 429 || errorMessage.includes("429") || errorMessage.includes("quota");
-        const isInvalidKeyError = error.status === 400 || error.status === 401 || errorMessage.includes("api key not valid") || errorMessage.includes("invalid_argument");
+        // We parse it here to ensure the frontend gets an object
+        const parsedContent = JSON.parse(cleanText);
 
-        if (isQuotaError || isInvalidKeyError) {
-          currentKeyIndex = (currentKeyIndex + 1) % keys.length;
-          attempts++;
-          console.log(`Rotating to key ${currentKeyIndex + 1}...`);
-        } else {
-          return res.status(500).json({ error: error.message || "Server error during generation" });
+        return res.status(200).json({ result: parsedContent });
+
+      } catch (err: any) {
+        console.error(`Attempt with key ${currentKeyIndex + 1} failed:`, err.message);
+        
+        // Standardize retry logic for fetch errors
+        currentKeyIndex = (currentKeyIndex + 1) % keys.length;
+        attempts++;
+        if (attempts >= keys.length) {
+          return res.status(500).json({ error: err.message || "All attempts failed" });
         }
       }
     }
 
-    return res.status(429).json({ error: "All configured API keys have been exhausted. Please wait or check your keys." });
+    return res.status(429).json({ error: "All configured API keys have been exhausted." });
   });
 
   // Contact Form Endpoint
