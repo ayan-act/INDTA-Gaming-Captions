@@ -124,7 +124,7 @@ async function startServer() {
           "🔥 Generating epicness... but reaching limits. Try again soon!",
           "🎮 Leveling up our system. Re-attempting connection..."
         ],
-        longCaption: "We are currently experiencing high traffic. Please wait a moment and try generating again for the best quality gaming captions.",
+        longCaption: "The zone was closing. I had zero meds and one bullet. Then it happened. I focused up, hit the flick, and secured the win. Never count yourself out. What's your most clutch comeback story?",
         hashtags: "#gaming #viral #trending #gamers #nextlevel #freefire #bgmi #pubg #highlights #clutch"
       },
       fallback: true

@@ -128,7 +128,7 @@ ${description ? `Context about the post: ${description}` : ""}
 
 Requirements:
 1. 3 short captions (max 10 words each).
-2. 1 long caption (3-5 sentences).
+2. 1 long caption: Must be a short, engaging STORYTELLING style (4-6 lines). Use a strong hook at the start, very short sentences, and a clear call-to-action (CTA) at the end. Avoid long paragraphs.
 3. Exactly 8 to 10 high-quality, relevant, and trending hashtags (total count MUST be between 8 and 10).
 
 Language: ${language}.
