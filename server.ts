@@ -125,7 +125,7 @@ async function startServer() {
           "🎮 Leveling up our system. Re-attempting connection..."
         ],
         longCaption: "We are currently experiencing high traffic. Please wait a moment and try generating again for the best quality gaming captions.",
-        hashtags: "#gaming #viral #trending #gamers #nextlevel"
+        hashtags: "#gaming #viral #trending #gamers #nextlevel #freefire #bgmi #pubg #highlights #clutch"
       },
       fallback: true
     });

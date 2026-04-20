@@ -129,7 +129,7 @@ ${description ? `Context about the post: ${description}` : ""}
 Requirements:
 1. 3 short captions (max 10 words each).
 2. 1 long caption (3-5 sentences).
-3. 20 trending hashtags.
+3. Exactly 8 to 10 high-quality, relevant, and trending hashtags (total count MUST be between 8 and 10).
 
 Language: ${language}.
 Tone: Energetic, Gen-Z friendly.
@@ -138,7 +138,7 @@ IMPORTANT: You MUST respond ONLY with a JSON object in the following format:
 {
   "shortCaptions": ["string", "string", "string"],
   "longCaption": "string",
-  "hashtags": "string (space separated hashtags)"
+  "hashtags": "string (space separated hashtags, exactly 8-10 tags)"
 }
 `;
 
