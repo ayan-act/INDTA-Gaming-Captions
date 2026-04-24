@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { 
   Gamepad2, 
   Flame, 
@@ -50,6 +50,24 @@ const PLATFORMS = [
 ];
 const LANGUAGES = ["Hinglish", "Bengali", "Hindi", "English"];
 
+const FREE_CAPTIONS = [
+  {
+    shortCaptions: ["Clutch moment 🔥", "Squad wipe 😎", "Headshot king 👑"],
+    longCaption: "When the zone is closing and you're the last one standing. Absolute intensity in every breath. 🎮",
+    hashtags: "#gaming #clutch #viral #gamer #proplayer #winner #highlights #victory #gamingcommunity #nextlevel"
+  },
+  {
+    shortCaptions: ["Booyah vibes 💀", "Eagle eye 🎯", "Legendary play 💎"],
+    longCaption: "They thought it was over, but that's when the real game started. Watch till the end! 🚀",
+    hashtags: "#booyah #bgmi #freefire #pubg #trending #headshot #savage #gaminglife #viralvideo #gamergirl"
+  },
+  {
+    shortCaptions: ["Total savage 😈", "Clean sweep 🧹", "God level aim 🦅"],
+    longCaption: "Calculated risk, perfect execution. This is how we take the top spot. Never back down. 🏆",
+    hashtags: "#gamingclips #epicmoments #clutchwin #proplay #gamingworld #esports #viralshorts #trendingnow #gamerforlife #skill"
+  }
+];
+
 export default function App() {
   const [game, setGame] = useState(GAMES[0]);
   const [mood, setMood] = useState(MOODS[1].id);
@@ -58,6 +76,26 @@ export default function App() {
   const [description, setDescription] = useState("");
   const [currentView, setCurrentView] = useState<"generator" | "contact">("generator");
   const [loading, setLoading] = useState(false);
+  const [useAI, setUseAI] = useState(false);
+  const [usage, setUsage] = useState(0);
+
+  useEffect(() => {
+    const saved = localStorage.getItem("ai_usage");
+    if (saved) {
+      const parsed = JSON.parse(saved);
+      const now = Date.now();
+      const sixHours = 6 * 60 * 60 * 1000;
+
+      if (now - parsed.time > sixHours) {
+        localStorage.setItem("ai_usage", JSON.stringify({ count: 0, time: now }));
+        setUsage(0);
+      } else {
+        setUsage(parsed.count);
+      }
+    } else {
+      localStorage.setItem("ai_usage", JSON.stringify({ count: 0, time: Date.now() }));
+    }
+  }, []);
 
   React.useEffect(() => {
     const params = new URLSearchParams(window.location.search);
@@ -111,13 +149,27 @@ export default function App() {
   };
 
   const generateCaptions = async () => {
+    if (useAI) {
+      if (usage >= 3) {
+        toast.error("⚠️ AI limit reached. Try again after 6 hours.", {
+          style: {
+            background: '#1A1A1A',
+            color: '#fff',
+            border: '1px solid rgba(255,255,255,0.1)'
+          }
+        });
+        return;
+      }
+    }
+
     setLoading(true);
     setResult(null);
 
-    try {
-      const selectedMood = MOODS.find(m => m.id === mood)?.label || mood;
+    if (useAI) {
+      try {
+        const selectedMood = MOODS.find(m => m.id === mood)?.label || mood;
 
-      const prompt = `
+        const prompt = `
 You are an expert social media gaming content writer.
 Task: Generate HIGH-ENGAGEMENT captions and hashtags for a gaming post.
 
@@ -142,27 +194,51 @@ IMPORTANT: You MUST respond ONLY with a JSON object in the following format:
 }
 `;
 
-      const res = await fetch("/api/generate", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ prompt }),
-      });
+        const res = await fetch("/api/generate", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ prompt }),
+        });
 
-      const data = await res.json();
+        const data = await res.json();
 
-      if (!res.ok) {
-        throw new Error(data.error || "Failed");
+        if (!res.ok) {
+          throw new Error(data.error || "Failed");
+        }
+
+        setResult(data.result);
+        
+        const newUsage = usage + 1;
+        setUsage(newUsage);
+        
+        const savedRaw = localStorage.getItem("ai_usage");
+        const saved = savedRaw ? JSON.parse(savedRaw) : { time: Date.now() };
+        
+        localStorage.setItem("ai_usage", JSON.stringify({
+          count: newUsage,
+          time: newUsage === 1 ? Date.now() : saved.time 
+        }));
+
+      } catch (error) {
+        console.error(error);
+        setResult({
+          shortCaptions: ["Server Busy ⚡", "Try Again 🔄", "AI Offline 🛠️"],
+          longCaption: "Our AI systems are currently experiencing heavy load. Please try generating again in a few moments or switch to Free Mode.",
+          hashtags: "#error #serverbusy #tryagain #gaming #indta"
+        });
+        toast.error("⚡ Generation failed. Try again.");
+      } finally {
+        setLoading(false);
       }
-
-      setResult(data.result);
-
-    } catch (err) {
-      console.error(err);
-      alert("Something went wrong. Please try again.");
-    } finally {
-      setLoading(false);
+    } else {
+      // FREE MODE
+      setTimeout(() => {
+        const random = FREE_CAPTIONS[Math.floor(Math.random() * FREE_CAPTIONS.length)];
+        setResult(random);
+        setLoading(false);
+      }, 1000); // Artificial delay for feel
     }
   };
 
@@ -374,33 +450,59 @@ IMPORTANT: You MUST respond ONLY with a JSON object in the following format:
                   </div>
                 </div>
 
-                <div className="flex gap-2">
-                  <button
-                    onClick={generateCaptions}
-                    disabled={loading}
-                    className="flex-1 py-4 rounded-2xl bg-game-accent text-white font-display uppercase italic tracking-wider shadow-xl shadow-game-accent/30 hover:scale-[1.02] active:scale-[0.98] transition-all disabled:opacity-50 flex items-center justify-center gap-3 text-lg"
-                  >
-                    {loading ? (
-                      <RotateCw className="w-5 h-5 animate-spin" />
-                    ) : (
-                      <>
-                        <Flame className="w-6 h-6 fill-current" />
-                        {result ? "REGENERATE" : "GENERATE"}
-                      </>
+                <div className="pt-2">
+                  <div className="flex items-center justify-between mb-4">
+                    <div 
+                      onClick={() => setUseAI(!useAI)} 
+                      className="flex items-center gap-3 cursor-pointer group"
+                    >
+                      <div className={`w-10 h-5 rounded-full relative transition-colors ${useAI ? 'bg-game-accent' : 'bg-white/10'}`}>
+                        <motion.div 
+                          animate={{ x: useAI ? 20 : 0 }}
+                          className="absolute top-1 left-1 w-3 h-3 bg-white rounded-full shadow-lg"
+                        />
+                      </div>
+                      <span className={`text-xs font-mono uppercase tracking-widest transition-colors ${useAI ? 'text-white' : 'text-gray-500'}`}>
+                        AI Supercharge
+                      </span>
+                    </div>
+                    {useAI && (
+                      <span className={`text-[10px] font-mono font-bold uppercase tracking-widest px-2 py-0.5 rounded-md border ${
+                        usage >= 3 ? 'text-red-400 border-red-400/20 bg-red-400/5' : 'text-game-accent border-game-accent/20 bg-game-accent/5'
+                      }`}>
+                        Usage: {usage}/3
+                      </span>
                     )}
-                  </button>
-                  <button
-                    onClick={resetGenerator}
-                    className="p-4 rounded-2xl bg-white/5 border border-white/10 text-gray-400 hover:text-white hover:bg-white/10 transition-all"
-                    title="Reset All"
-                  >
-                    <RotateCcw className="w-6 h-6" />
-                  </button>
-                </div>
+                  </div>
 
-                <p className="text-[10px] font-mono uppercase tracking-[0.2em] text-center text-gray-500">
-                  Unlimited AI Generations Powered by INDTA
-                </p>
+                  <div className="flex gap-2">
+                    <button
+                      onClick={generateCaptions}
+                      disabled={loading || (useAI && usage >= 3)}
+                      className="flex-1 py-4 rounded-2xl bg-game-accent text-white font-display uppercase italic tracking-wider shadow-xl shadow-game-accent/30 hover:scale-[1.02] active:scale-[0.98] transition-all disabled:opacity-50 flex items-center justify-center gap-3 text-lg"
+                    >
+                      {loading ? (
+                        <RotateCw className="w-5 h-5 animate-spin" />
+                      ) : (
+                        <>
+                          {useAI ? <Zap className="w-6 h-6 fill-current" /> : <Flame className="w-6 h-6 fill-current" />}
+                          {result ? "REGENERATE" : "GENERATE"}
+                        </>
+                      )}
+                    </button>
+                    <button
+                      onClick={resetGenerator}
+                      className="p-4 rounded-2xl bg-white/5 border border-white/10 text-gray-400 hover:text-white hover:bg-white/10 transition-all"
+                      title="Reset All"
+                    >
+                      <RotateCcw className="w-6 h-6" />
+                    </button>
+                  </div>
+
+                  <p className="text-[10px] font-mono uppercase tracking-[0.2em] text-center text-gray-500 mt-4">
+                    {useAI ? `Session Limit: 3 per 6 hours` : `Unlimited Free Mode Generations`}
+                  </p>
+                </div>
               </div>
             </div>
 
