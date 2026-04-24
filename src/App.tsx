@@ -626,8 +626,13 @@ IMPORTANT: You MUST respond ONLY with a JSON object in the following format:
             <h2 className="text-3xl md:text-4xl font-display uppercase tracking-tighter text-white">
               <span className="text-game-accent">INDTA</span> GAMING CAPTIONS
             </h2>
-            <p className="text-gray-400 leading-relaxed text-lg">
-              Indta Gaming Caption Generator is more than just a tool, it is your ultimate companion for building a viral gaming brand, combining advanced AI with deep gaming culture to create captions that truly spark engagement instead of just filling space
+            <p className="space-y-4">
+              <span className="block text-white font-medium text-xl leading-snug">
+                Welcome to <span className="text-game-accent">INDTA</span> Gaming Captions Generator, your ultimate boost for going viral 🚀
+              </span>
+              <span className="block text-gray-400 leading-relaxed text-base italic border-l-2 border-game-accent/30 pl-4">
+                In today’s fast-paced gaming world, your gameplay shows skill, but your captions create impact and grab attention.
+              </span>
             </p>
             <div className="flex gap-4">
               <a 
