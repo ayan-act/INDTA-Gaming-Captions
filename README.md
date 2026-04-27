@@ -1,17 +1,20 @@
-# Free Fire Caption Generator
+<div align="center">
+<img width="1200" height="475" alt="GHBanner" src="https://github.com/user-attachments/assets/0aa67016-6eaf-458a-adb2-6e31a0763ed6" />
+</div>
 
-Generate viral captions & hashtags for Free Fire, BGMI & PUBG
+# Run and deploy your AI Studio app
 
-## 🔗 Try Now
-👉 [Free Fire Caption Tool](https://captions.indtanews.com)  
-👉 [Freefire Biocode Style](https://www.indtanews.com)
+This contains everything you need to run your app locally.
 
-## Features
-- Viral captions generator  
-- Hashtag suggestions  
-- Multi-game support  
+View your app in AI Studio: https://ai.studio/apps/b61e92c2-d995-4f61-81e1-1dc7518d7eb6
 
 ## Run Locally
-```bash
-npm install
-npm run dev
+
+**Prerequisites:**  Node.js
+
+
+1. Install dependencies:
+   `npm install`
+2. Set the `GEMINI_API_KEY` in [.env.local](.env.local) to your Gemini API key
+3. Run the app:
+   `npm run dev`
